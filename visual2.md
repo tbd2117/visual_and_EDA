@@ -441,3 +441,76 @@ weather_df %>%
     ## Warning: Removed 18 rows containing non-finite values (stat_density).
 
 ![](visual2_files/figure-gfm/unnamed-chunk-15-2.png)<!-- -->
+
+## Revisit the pups
+
+Data form the FAS study
+
+``` r
+pup_data = 
+  read_csv("./data/FAS_pups.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(sex = recode(sex, `1` = "male", `2` = "female"))
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   `Litter Number` = col_character(),
+    ##   Sex = col_double(),
+    ##   `PD ears` = col_double(),
+    ##   `PD eyes` = col_double(),
+    ##   `PD pivot` = col_double(),
+    ##   `PD walk` = col_double()
+    ## )
+
+``` r
+litters_data = 
+  read_csv("./data/FAS_litters.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(group, into = c("dose", "day_of_tx"), sep = 3)
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   Group = col_character(),
+    ##   `Litter Number` = col_character(),
+    ##   `GD0 weight` = col_double(),
+    ##   `GD18 weight` = col_double(),
+    ##   `GD of Birth` = col_double(),
+    ##   `Pups born alive` = col_double(),
+    ##   `Pups dead @ birth` = col_double(),
+    ##   `Pups survive` = col_double()
+    ## )
+
+``` r
+FAS_data = left_join(pup_data, litters_data, by = "litter_number")
+
+FAS_data %>% 
+  ggplot(aes(x = dose, y = pd_ears)) + 
+  geom_violin() +
+  facet_grid(. ~day_of_tx)
+```
+
+    ## Warning: Removed 18 rows containing non-finite values (stat_ydensity).
+
+![](visual2_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+``` r
+## think about if you wanted to have different variables (pd_eras, pd_pivot, pd_eyes) on the same plot
+## you actually have pd as a common link --> pivot!
+
+FAS_data %>% 
+  select(dose, day_of_tx, starts_with("pd_")) %>% 
+  pivot_longer(
+    pd_ears:pd_walk,
+    names_to = "outcome",
+    values_to = "pn_day"
+  ) %>% 
+  drop_na() %>% 
+  mutate(outcome = forcats::fct_relevel(outcome, "pd_ears", "pd_pivot", "pd_walk", "pd_eyes")) %>% 
+  ggplot(aes(x = dose, y = pn_day)) + 
+  geom_violin() +
+  facet_grid(day_of_tx ~ outcome)
+```
+
+![](visual2_files/figure-gfm/unnamed-chunk-16-2.png)<!-- -->
