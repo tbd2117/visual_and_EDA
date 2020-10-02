@@ -119,3 +119,60 @@ weather_df %>%
   janitor::tabyl(name, cold)
 ```
 
+## General summaries
+
+You can do lots of summaries
+
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  summarize(
+    mean_tmax = mean(tmax, na.rm = TRUE),
+    mean_prcp = mean(prcp, na.rm = TRUE),
+    median_tmin = median(tmin, na.rm = TRUE)
+  )
+```
+
+this is a DF! So we can make a plot.
+
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  summarize(
+    mean_tmax = mean(tmax, na.rm = TRUE),
+    mean_prcp = mean(prcp, na.rm = TRUE),
+    median_tmin = median(tmin, na.rm = TRUE)
+  ) %>% 
+  ggplot(aes(x = month, y = mean_tmax, color = name)) + 
+  geom_point() + 
+  geom_line()
+
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) + 
+  geom_point() + 
+  geom_line()
+```
+
+Suppose you want to summarize many columns in the same way
+
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  summarize(across(prcp:tmin, mean))
+```
+
+Reminder: sometimes your data are easier to read in another format.
+
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  summarise(mean_tmax = mean(tmax)) %>% 
+  pivot_wider(
+    names_from = name,
+    values_from = mean_tmax
+  ) %>% 
+  knitr::kable(digits = 1)
+```
+
+
+
