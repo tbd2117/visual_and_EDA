@@ -109,3 +109,77 @@ weather_df %>%
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
 ![](visual2_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+## scales
+
+Start with the same plot
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  labs(
+    title = "Tempaerature Plot",
+    x = "Minimum daily Temperature (ºC)",
+    y = "Maximum daily Temperature (ºC)",
+      caption = "Data from rnoaa package; temperatures in 2017"
+  ) + 
+  scale_x_continuous(
+    breaks = c(-15, 0, 15),
+    labels = c("-15ºC", "0", "15")
+  ) +
+  scale_y_continuous(
+    trans = "log",  #sqrt could be an option
+    position = "right"
+  )
+```
+
+    ## Warning in self$trans$transform(x): NaNs produced
+
+    ## Warning: Transformation introduced infinite values in continuous y-axis
+
+    ## Warning: Removed 90 rows containing missing values (geom_point).
+
+![](visual2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+Lets look at color scales
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  labs(
+    title = "Tempaerature Plot",
+    x = "Minimum daily Temperature (ºC)",
+    y = "Maximum daily Temperature (ºC)",
+      caption = "Data from rnoaa package; temperatures in 2017"
+  ) +
+  scale_color_hue(
+    name = "Location",
+    h = c(100, 300)
+  )
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](visual2_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  labs(
+    title = "Tempaerature Plot",
+    x = "Minimum daily Temperature (ºC)",
+    y = "Maximum daily Temperature (ºC)",
+      caption = "Data from rnoaa package; temperatures in 2017"
+  ) +
+  viridis::scale_color_viridis( #good for colorblind people AND is better gray scale print than default
+    name = "Location",
+    discrete = TRUE
+  )
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](visual2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
