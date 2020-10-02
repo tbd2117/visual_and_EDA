@@ -1,0 +1,10 @@
+---
+title: "Data_Visualization"
+output: github_document
+date: 10/02/2020
+---
+
+```{r setup}
+library(tidyverse)
+library(ggridges)
+```
