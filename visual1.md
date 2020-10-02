@@ -1,4 +1,4 @@
-Data\_Visualization
+Exploratory\_Data\_Analysis
 ================
 10/02/2020
 

@@ -1,5 +1,5 @@
 ---
-title: "Data_Visualization"
+title: "Exploratory_Data_Analysis"
 output: github_document
 date: 10/02/2020
 ---
@@ -8,3 +8,4 @@ date: 10/02/2020
 library(tidyverse)
 library(ggridges)
 ```
+
